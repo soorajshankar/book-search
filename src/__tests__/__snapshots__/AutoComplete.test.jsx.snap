@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders AutoComplete should match Snapshot 1`] = `
+<div>
+  <div
+    class="c-ac"
+  >
+    <input
+      class="c-ac__input"
+      value="test"
+    />
+    <div
+      class="c-ac__suggestions"
+    >
+      <div
+        class="c-suggestions__item"
+      >
+        saflk
+      </div>
+      <div
+        class="c-suggestions__item"
+      >
+        test3
+      </div>
+      <div
+        class="c-suggestions__item"
+      >
+        tese4
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -9,7 +9,7 @@ import {searchSummary} from '../utils/utils'
 
 const Home = () => {
   const [value, setValue] = useState('')
-  const [maxSug,setMaxSug] = useState(5); // Maximum suggestions displayed
+  const [maxSug, setMaxSug] = useState(5) // Maximum suggestions displayed
   const [suggestions, setSuggestions] = useState([])
   const [results, setResults] = useState([])
 
@@ -22,16 +22,20 @@ const Home = () => {
   }
 
   const onSubmit = () => {
-    const result = searchSummary(value, data.summaries, maxSug)
+    const result = searchSummary(
+      value,
+      data.summaries,
+      maxSug,
+      data.titles,
+      data.authors,
+    )
     setResults(result)
   }
   const onSelect = e => {
     setSuggestions([])
     setValue(e)
   }
-  const handleMaxSug = (e)=>{
-      setMaxSug(e.target.value)
-  }
+  const handleMaxSug = e => setMaxSug(e.target.value)
   return (
     <Container>
       <h2 className="c-title">Search Books</h2>
@@ -43,9 +47,17 @@ const Home = () => {
           Search
         </Button>
       </div>
-      <div className="c-drawer__item"><label>Max. suggestions : </label><input value={maxSug} onChange={handleMaxSug} style={{width:50}} type="number"/></div>
+      <div className="c-drawer__item">
+        <label>Max. suggestions : </label>
+        <input
+          value={maxSug}
+          onChange={handleMaxSug}
+          style={{width: 50}}
+          type="number"
+        />
+      </div>
       <BookList list={results} />
-Î    </Container>
+    </Container>
   )
 }
 

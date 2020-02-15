@@ -89,7 +89,13 @@ export const sortObjToArr = (res = {}) =>
  * @param {*} [result={}]
  * @returns limitted results array
  */
-export const trimResults = (sortedPts = [], maxCount = 0, result = {}) => {
+export const trimResults = (
+  sortedPts = [],
+  maxCount = 0,
+  result = {},
+  titles = [],
+  authors = [],
+) => {
   let count = 0
   let results = []
   for (const pt of sortedPts) {
@@ -97,7 +103,13 @@ export const trimResults = (sortedPts = [], maxCount = 0, result = {}) => {
     const ptResult = result[pt] || {}
     for (const [id, val] of Object.entries(ptResult)) {
       if (count >= maxCount) break
-      results.push({id, summary: val, pt}) // returning extra parameter pt as the search score
+      results.push({
+        id,
+        summary: val,
+        pt,
+        title: titles[id],
+        author: authors[id],
+      }) // returning extra parameter pt as the search score
       count++
     }
     if (count >= maxCount) break
@@ -105,16 +117,28 @@ export const trimResults = (sortedPts = [], maxCount = 0, result = {}) => {
   return results
 }
 
-export var getResult = (keywords, summaries, maxCount) => {
+export var getResult = (
+  keywords,
+  summaries,
+  maxCount,
+  titles = [],
+  authors = [],
+) => {
   var result = processSummaries(keywords, summaries)
   // sort only the grouped scores, not the entire list
   var sorted = sortObjToArr(result)
   // trim with max number of results, loop will break once the result stack reach the max count
-  return trimResults(sorted, maxCount, result)
+  return trimResults(sorted, maxCount, result, titles, authors)
 }
-export const searchSummary = (keyword = '', summaries = [], maxCount) => {
+export const searchSummary = (
+  keyword = '',
+  summaries = [],
+  maxCount,
+  titles = [],
+  authors = [],
+) => {
   const keywords = findKeywords(keyword)
-  const result = getResult(keywords, summaries, maxCount)
+  const result = getResult(keywords, summaries, maxCount, titles, authors)
   return result
 }
 
