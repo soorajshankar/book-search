@@ -112,6 +112,11 @@ export var getResult = (keywords, summaries, maxCount) => {
   // trim with max number of results, loop will break once the result stack reach the max count
   return trimResults(sorted, maxCount, result)
 }
+export const searchSummary = (keyword = '', summaries = [], maxCount) => {
+  const keywords = findKeywords(keyword)
+  const result = getResult(keywords, summaries, maxCount)
+  return result
+}
 
 const leastPointList = {
   // giving low ranking points to auxilaries , be forms etc, can be extented with langages
