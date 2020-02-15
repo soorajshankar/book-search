@@ -1,18 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Home from './containers/Home'
-import {findKeywords, getResult} from './utils/utils'
-import {data} from './utils/data'
-const {summaries} = data
-
-// NOTE: now this file is just used for easy utils debugging no UI development is done here.
-// just to leverage Chrome debugger.
-
+import './styles.css'
 function App() {
-  const keywords = findKeywords('is your problems')
-  console.debug(keywords)
-  const result = getResult(keywords, summaries, 3)
-  console.log(result)
   return <Home />
 }
 
