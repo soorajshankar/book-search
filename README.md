@@ -8,3 +8,7 @@
    > Some logic has to be implemented for assigning weightage (more like NLP, but time is a factor :( 
 4. Basically whenever a search is triggered, each summary will be matched & counted on each keywords  (N*K looks okay at this point). Regex can do this at a low cost.
 5. counts are multiplied with repetitions and all keyword score are totaled to get the search score on each summary ie: `SUM of each key words (weight* reps)`
+
+## Assumptions 
+1. `number of instances of partial match` can be used as relevancy weightage.
+2. giving auxilaries low weightage is fine for now.

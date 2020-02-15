@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Home from './containers/Home'
 import {findKeywords, getResult} from './utils/utils'
 import {data} from './utils/data'
 const {summaries} = data
@@ -12,7 +13,7 @@ function App() {
   console.debug(keywords)
   const result = getResult(keywords, summaries, 3)
   console.log(result)
-  return 'TT'
+  return <Home />
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
