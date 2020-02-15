@@ -66,10 +66,53 @@ export var processSummaries = (keywords = {}, summaries = []) => {
   })
   return result
 }
+
+/**
+ * # sortObjToArr
+ * sort result object jsut sort the scores in descending order
+ * summaries which will have the same score will be clubbed
+ *
+ * @param {*} [res={}] input result object
+ * @returns sorted array with scores only
+ */
+export const sortObjToArr = (res = {}) =>
+  Object.keys(res).sort((a, b) => {
+    if (parseFloat(a) < parseFloat(b)) return 1
+    else return -1
+  })
+/**
+ * trimResults
+ * limit the results and convert the results into required form
+ *
+ * @param {*} [sortedPts=[]]
+ * @param {number} [maxCount=0]
+ * @param {*} [result={}]
+ * @returns limitted results array
+ */
+export const trimResults = (sortedPts = [], maxCount = 0, result = {}) => {
+  let count = 0
+  let results = []
+  for (const pt of sortedPts) {
+    // console.log(pt,result);
+    const ptResult = result[pt] || {}
+    for (const [id, val] of Object.entries(ptResult)) {
+      if (count >= maxCount) break
+      results.push({id, summary: val, pt}) // returning extra parameter pt as the search score
+      count++
+    }
+    if (count >= maxCount) break
+  }
+  return results
+}
+
 export var getResult = (keywords, summaries, maxCount) => {
   var result = processSummaries(keywords, summaries)
-  return result
+  // sort only the grouped scores, not the entire list
+  var sorted = sortObjToArr(result)
+  // trim with max number of results, loop will break once the result stack reach the max count
+  return trimResults(sorted, maxCount, result)
 }
+
 const leastPointList = {
   // giving low ranking points to auxilaries , be forms etc, can be extented with langages
   is: 0.001,
