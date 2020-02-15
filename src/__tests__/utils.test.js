@@ -1,5 +1,7 @@
 import assert from 'assert'
-import {findKeywords} from '../utils/utils'
+import {findKeywords, getScore, getMtchCnt} from '../utils/utils'
+import {keywords, data} from '../testData'
+
 // findKeywords
 describe('#findKeywords', () => {
   describe('valid Test1', () => {
@@ -29,6 +31,54 @@ describe('#findKeywords', () => {
     it('should respond to invalid inputs with empty object', () => {
       const kwrds = findKeywords('')
       assert.equal(Object.keys(kwrds).length, 0)
+    })
+  })
+})
+
+// getScore
+describe('#getScore', () => {
+  describe('valid Test1', () => {
+    const score = getScore(keywords, data.summaries[10].summary)
+    it('should have valid score', () => {
+      assert.equal(score, 0.001)
+    })
+  })
+  describe('valid Test2 big query', () => {
+    const score = getScore(keywords, data.summaries[44].summary)
+    it('should have valid results', () => {
+      assert.equal(score, 0.004)
+    })
+  })
+  describe('invalid Test', () => {
+    it('should respond to invalid summary', () => {
+      const score = getScore(keywords, '')
+      assert.equal(score, 0)
+    })
+    it('should respond to invalid kw', () => {
+      const score = getScore({}, data.summaries[3].summary)
+      assert.equal(score, 0)
+    })
+  })
+})
+
+// getMtchCnt
+describe('#getMtchCnt', () => {
+  describe('valid Test1', () => {
+    const score = getMtchCnt(data.summaries[12].summary, 'is')
+    it('should have valid score', () => {
+      assert.equal(score, 1)
+    })
+  })
+  describe('valid Test2', () => {
+    const score = getMtchCnt(data.summaries[12].summary, 'book')
+    it('should have valid score', () => {
+      assert.equal(score, 1)
+    })
+  })
+  describe('invalid Test', () => {
+    const score = getMtchCnt(data.summaries[12].summary, 'is book')
+    it('should have valid score', () => {
+      assert.equal(score, 0)
     })
   })
 })
