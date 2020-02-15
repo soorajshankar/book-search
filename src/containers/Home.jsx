@@ -30,6 +30,7 @@ const Home = () => {
   }
   return (
     <Container>
+        <h2 className="c-title">Search Books</h2>
       <div className="c-container__shell">
         <AutoComplete
           {...{onChange, onSelect, visible: true, suggestions, value}}

@@ -3,11 +3,15 @@
   --ac-height: 40px;
   --ac-font-size: 18px;
 }
+.c-title{
+text-align: center;
+}
 .c-container__shell{
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2rem ;
 }
 .btn__search{
   cursor: pointer;
@@ -25,9 +29,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  flex-grow: 1;
-  margin-right:5px;
-  flex-basis: 80%;
+  margin: 0px 5px;
+  flex-basis: 65%;
 }
 .c-ac .c-ac__input {
   width: 100%;
@@ -74,4 +77,23 @@
 }
 .c-ac__suggestions .c-suggestions__item:hover {
   background-color: rgb(199, 199, 199);
+}
+.c-list .c-list__item{
+  margin-bottom: 25px;;
+}
+.c-card__author{
+  font-weight: 300;
+  margin: 0;
+}
+.c-card__title{
+  margin-bottom: 5px;
+}
+.c-card__summary{
+  margin: 8px 0px;
+  margin: 8px 0px;
+  max-height: 17px; /* can increase upto required lines*/
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
