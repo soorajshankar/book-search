@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders BookList should match Snapshot 1`] = `
+<div>
+  <div
+    class="c-list"
+  >
+    <div
+      class="c-list__item"
+    >
+      <h3
+        class="c-card__title"
+      >
+        title
+      </h3>
+      <h4
+        class="c-card__author"
+      >
+        author1
+      </h4>
+      <p
+        class="c-card__summary"
+      >
+        summary1
+      </p>
+    </div>
+  </div>
+</div>
+`;

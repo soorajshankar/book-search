@@ -47,18 +47,21 @@ const Home = () => {
           Search
         </Button>
       </div>
-      <div className="c-drawer__item">
-        <label>Max. suggestions : </label>
-        <input
-          value={maxSug}
-          onChange={handleMaxSug}
-          style={{width: 50}}
-          type="number"
-        />
-      </div>
+      <MaxSuggestions {...{maxSug, handleMaxSug}} />
       <BookList list={results} />
     </Container>
   )
 }
+const MaxSuggestions = ({maxSug, handleMaxSug}) => (
+  <div className="c-drawer__item">
+    <label>Max. suggestions : </label>
+    <input
+      value={maxSug}
+      onChange={handleMaxSug}
+      style={{width: 50}}
+      type="number"
+    />
+  </div>
+)
 
 export default Home

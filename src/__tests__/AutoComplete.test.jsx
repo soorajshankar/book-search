@@ -2,16 +2,6 @@ import React from 'react'
 import {render, fireEvent} from '@testing-library/react'
 import AutoComplete from '../components/AutoComplete'
 
-function Counter() {
-  const [count, setCount] = React.useState(0)
-  return (
-    <div>
-      <div>{count}</div>
-      <button onClick={() => setCount(count + 1)}>click me</button>
-    </div>
-  )
-}
-
 describe('renders AutoComplete', () => {
   it('should match Snapshot', () => {
     let count = 0
