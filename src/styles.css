@@ -3,17 +3,22 @@
   --ac-height: 40px;
   --ac-font-size: 18px;
 }
-.c-title{
-text-align: center;
+.App a {
+  position: fixed;
+  right: 20px;
+  top: 20px;
 }
-.c-container__shell{
+.c-title {
+  text-align: center;
+}
+.c-container__shell {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem ;
+  margin-bottom: 10px;
 }
-.btn__search{
+.btn__search {
   cursor: pointer;
   font-size: 16px;
   padding: 5px 10px;
@@ -22,7 +27,7 @@ text-align: center;
   border-radius: 4px;
   height: 40px;
 }
-.btn__search:hover{
+.btn__search:hover {
   background: rgb(213, 213, 213);
 }
 .c-ac {
@@ -42,7 +47,7 @@ text-align: center;
   border: solid 1px rgb(213, 213, 213);
   border-radius: 4px;
 }
-.c-ac .c-ac__input:focus{
+.c-ac .c-ac__input:focus {
   outline: none;
   border: solid 1px rgb(175, 175, 175);
 }
@@ -78,17 +83,17 @@ text-align: center;
 .c-ac__suggestions .c-suggestions__item:hover {
   background-color: rgb(199, 199, 199);
 }
-.c-list .c-list__item{
-  margin-bottom: 25px;;
+.c-list .c-list__item {
+  margin-bottom: 25px;
 }
-.c-card__author{
+.c-card__author {
   font-weight: 300;
   margin: 0;
 }
-.c-card__title{
+.c-card__title {
   margin-bottom: 5px;
 }
-.c-card__summary{
+.c-card__summary {
   margin: 8px 0px;
   margin: 8px 0px;
   max-height: 17px; /* can increase upto required lines*/
@@ -96,4 +101,28 @@ text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.c-drawer{
+  box-shadow: -4px 0px 12px -4px rgba(0,0,0,0.6);
+  position: absolute;
+  min-width: 300px;
+  max-width: 300px;
+  background: red;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+}
+.c-drawer__item{
+  display: flex;
+  justify-content: center;
+}
+.c-drawer__close-btn{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+.c-drawer__header{
+  height: 50px;
 }
