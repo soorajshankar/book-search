@@ -4,12 +4,12 @@ import ListItem from './ListItem'
 const BookList = ({list = []}) => (
   <div className="c-list">
     {list.length > 0 ? (
-      list.map((book, i) => (
+      list.map(({summary = '', title = '', author = {}}, i) => (
         <ListItem
           key={i}
-          summary={book.summary}
-          title={book.title}
-          author={book?.author?.author}
+          summary={summary}
+          title={title}
+          author={author.author}
         />
       ))
     ) : (
