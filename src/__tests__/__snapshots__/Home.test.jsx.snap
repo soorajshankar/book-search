@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Home should match Snapshot 1`] = `
+<div>
+  <div
+    class="App"
+    style="margin: 20px;"
+  >
+    <h2
+      class="c-title"
+    >
+      Search Books
+    </h2>
+    <div
+      class="c-container__shell"
+    >
+      <div
+        class="c-ac"
+      >
+        <input
+          class="c-ac__input"
+          value=""
+        />
+      </div>
+      <button
+        class="btn__search"
+      >
+        Search
+      </button>
+    </div>
+    <div
+      class="c-drawer__item"
+    >
+      <label>
+        Max. suggestions : 
+      </label>
+      <input
+        style="width: 50px;"
+        type="number"
+        value="5"
+      />
+    </div>
+    <div
+      class="c-list"
+      data-testid="book_list"
+    >
+      <p
+        style="text-align: center;"
+      >
+        No books Selected
+      </p>
+    </div>
+  </div>
+</div>
+`;

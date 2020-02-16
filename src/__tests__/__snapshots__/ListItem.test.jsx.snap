@@ -4,6 +4,7 @@ exports[`renders ListItem should match Snapshot 1`] = `
 <div>
   <div
     class="c-list__item"
+    data-testid="book_item"
   >
     <h3
       class="c-card__title"

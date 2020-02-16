@@ -15,17 +15,12 @@ exports[`renders AutoComplete should match Snapshot 1`] = `
       <div
         class="c-suggestions__item"
       >
-        saflk
+        test
       </div>
       <div
         class="c-suggestions__item"
       >
-        test3
-      </div>
-      <div
-        class="c-suggestions__item"
-      >
-        tese4
+        test2
       </div>
     </div>
   </div>
