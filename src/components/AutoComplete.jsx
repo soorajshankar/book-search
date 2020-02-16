@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 
 // developer friendly message
 // can write logic to remove  `console.debug` in the build script
@@ -18,12 +18,18 @@ export default function({
   // allows prop change > local state change ie rerender
   useEffect(() => {
     if (sValue !== value) setSValue(value) // value from prop gets priority
+    // eslint thinks that since i use sValue,inside this hook, it has to be a dependacy
+    // but i just need to listen for the value prop here
+    // eslint-disable-next-line
   }, [value])
 
-  const onLChange = e => {
-    setSValue(e.target.value)
-    onChange(e.target.value)
-  }
+  const onLChange = useCallback(
+    e => {
+      setSValue(e.target.value)
+      onChange(e.target.value)
+    },
+    [onChange],
+  )
   return (
     <div className="c-ac">
       <input onChange={onLChange} className="c-ac__input" value={sValue} />
