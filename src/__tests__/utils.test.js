@@ -1,6 +1,13 @@
 import assert from 'assert'
-import {findKeywords, getScore, getResult, trimResults} from '../utils/utils'
-import {keywords, data, sortedids, result} from '../testData'
+import {
+  findKeywords,
+  getScore,
+  getResult,
+  trimResults,
+  indexSummaries,
+  filterSummaries,
+} from '../utils/utils'
+import {keywords, data, sortedids, result, filteredIdSet} from '../testData'
 
 // findKeywords
 describe('#findKeywords', () => {
@@ -60,7 +67,49 @@ describe('#getScore', () => {
     })
   })
 })
+// getScore
+describe('#indexSummaries', () => {
+  describe('valid Test1', () => {
+    const mapper = indexSummaries(data.summaries)
+    it('should have valid mapper', () => {
+      assert.equal(Object.keys(mapper).length, 1270)
+      assert.equal(mapper['book'] instanceof Set, true)
+      assert.equal(mapper['book'].has(0), true)
+    })
+  })
 
+  describe('invalid Test', () => {
+    const mapper = indexSummaries([])
+    it('should have valid mapper', () => {
+      assert.equal(Object.keys(mapper).length, 0)
+    })
+  })
+})
+
+// getScore
+describe('#filterSummaries', () => {
+  describe('valid Test1', () => {
+    const indxdSummaries = indexSummaries(data.summaries)
+    const summ = filterSummaries(indxdSummaries, 'is your problems')
+    it('should have valid mapper', () => {
+      assert.equal(summ instanceof Set, true)
+      assert.equal(summ.size, 50)
+      assert.equal(summ.has(0), true)
+      assert.equal(summ.has(49), true)
+      assert.equal(summ.has(43), true)
+      assert.equal(summ.has(26), false)
+    })
+  })
+
+  describe('invalid Test', () => {
+    const summ = filterSummaries([], '')
+    it('should have valid mapper', () => {
+      assert.equal(summ instanceof Set, true)
+      assert.equal(summ.has(0), false)
+      assert.equal(summ.size, 0)
+    })
+  })
+})
 // trimResults
 describe('#trimResults', () => {
   describe('valid Test1', () => {
@@ -91,7 +140,14 @@ describe('#trimResults', () => {
 // getResult
 describe('#getResult', () => {
   describe('valid Test1', () => {
-    const res = getResult(keywords, data.summaries, 3)
+    const res = getResult(
+      keywords,
+      data.summaries,
+      3,
+      data.titles,
+      data.authors,
+      filteredIdSet,
+    )
     it('should have number of results', () => {
       assert.equal(res.length, 3)
     })

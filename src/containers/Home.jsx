@@ -5,7 +5,12 @@ import BookList from '../components/BookList'
 import AutoComplete from '../components/AutoComplete'
 import {getSuggestions, debounce} from '../utils/UiUtil'
 import {data} from '../utils/data'
-import {searchSummary} from '../utils/utils'
+import {searchSummary, indexSummaries} from '../utils/utils'
+
+// NOTE****
+// this is an expensive operation and intended to happen in the backend
+// result can be memoized in redis or any in memory cache
+const indxdSummaries = indexSummaries(data.summaries)
 
 const Home = () => {
   const [value, setValue] = useState('')
@@ -30,6 +35,7 @@ const Home = () => {
       maxSug,
       data.titles,
       data.authors,
+      indxdSummaries,
     )
     setResults(result)
   }
