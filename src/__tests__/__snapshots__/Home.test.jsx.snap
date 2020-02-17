@@ -25,7 +25,7 @@ exports[`renders Home should match Snapshot 1`] = `
       <button
         class="btn__search"
       >
-        Search
+        Submit
       </button>
     </div>
     <div
@@ -44,11 +44,11 @@ exports[`renders Home should match Snapshot 1`] = `
       class="c-list"
       data-testid="book_list"
     >
-      <p
-        style="text-align: center;"
+      <h4
+        style="color: rgb(136, 136, 132);"
       >
         No books Selected
-      </p>
+      </h4>
     </div>
   </div>
 </div>

@@ -11,7 +11,7 @@ export default function({
   suggestions = [],
   onChange = defaultMethod('onChange'),
   onSelect = defaultMethod('onSelect'),
-  value = '',
+  value = {title: ''},
   visible = true,
 }) {
   const [sValue, setSValue] = useState(value)
@@ -36,13 +36,13 @@ export default function({
 
       {visible && Array.isArray(suggestions) && suggestions.length > 0 && (
         <div className="c-ac__suggestions">
-          {suggestions.map((item, i) => (
+          {suggestions.map((item = {}, i) => (
             <div
               key={i}
               onClick={() => onSelect(item)}
               className="c-suggestions__item"
             >
-              {item}
+              {item.title || ''}
             </div>
           ))}
         </div>

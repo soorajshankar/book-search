@@ -22,3 +22,17 @@ export function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args)
   }
 }
+
+/**
+ * ## trimString
+ * js function to trim and add ... on the summary
+ * @param {*} str summary
+ * @param {number} [length=50] max length
+ * @returns trimmed string
+ */
+export const trimString = (str, length = 50) => {
+  if (!(typeof str === 'string' || typeof str == 'number')) return ''
+  if (typeof str == 'number') return ''
+  if (str.length < length) return str
+  return str.substring(0, length) + '...'
+}
