@@ -29,7 +29,8 @@ export const formSentFromIndex = (array, index, acc) => {
   const sntcObj = acc
   for (let i = index; i < array.length; i++) {
     sntc = sntc ? `${sntc} ${array[i]}` : array[i] // constructing word groups with spaces
-    sntcObj[sntc] = getWeight(i - index + 1, array.length) // progressively storing keyword:weight pair into an object(to avoid another loop)
+    sntcObj[sntc] =
+      leastPointList[sntc] || getWeight(i - index + 1, array.length) // progressively storing keyword:weight pair into an object(to avoid another loop)
   }
   return sntcObj
 }
@@ -43,27 +44,49 @@ const getWeight = (pos, length) => {
 export const getScore = (keywords = {}, summary = {}, id) => {
   // id param is just for debugging
   let score = 0
-  // count all keywords reps K iterartions.
-  for (const [kw, weight] of Object.entries(keywords)) {
-    const matchCount = getMtchCnt(summary, kw)
-    // mutiply with keyword weight
-    const adder = matchCount * (leastPointList[kw] || weight)
-    score += adder
-    // if (id == 40) console.log({ score, matchCount, kw, weight, adder });
+  var last
+  // loop through summary words once
+  const smArr = summary.split(' ')
+
+  // DEBUG PURPOSE
+  // let combs = []
+  // let wrds = []
+
+  // this loop reduces the complexity to N (from N* K old regex method)
+  for (const word of smArr) {
+    const wrd = word.toLowerCase()
+    if (wrd in keywords) {
+      score += keywords[wrd] // adding score
+
+      // if the words are contineous add extra points and set last with the new combination
+      const combination = `${last} ${wrd}`
+      if (last !== undefined && combination in keywords) {
+        score += keywords[combination] // along with word score adding combination score
+        last = combination
+        // combs.push(combination) // debugging
+      } else {
+        last = wrd
+        // wrds.push(wrd) // debugging
+      }
+    } else {
+      // no match clear last wrd
+      last = undefined
+    }
   }
   return score
 }
 
-export const getRegex = tst => new RegExp(tst, 'gi')
-export const getMtchCnt = (txt, kw) =>
-  ((txt || '').match(getRegex(kw)) || []).length
-
-export var processSummaries = (keywords = {}, summaries = []) => {
+export const processSummaries = (
+  keywords = {},
+  summaries = [],
+  filteredIdSet,
+) => {
   var result = {}
-  summaries.forEach(({summary = '', id}, sIx) => {
+  for (const id of filteredIdSet) {
+    const {summary = ''} = summaries[id]
     let score = getScore(keywords, summary, id)
     if (score > 0) result[score] = {...result[score], ...{[id]: summary}}
-  })
+  }
   return result
 }
 
@@ -99,7 +122,6 @@ export const trimResults = (
   let count = 0
   let results = []
   for (const pt of sortedPts) {
-    // console.log(pt,result);
     const ptResult = result[pt] || {}
     for (const [id, val] of Object.entries(ptResult)) {
       if (count >= maxCount) break
@@ -123,10 +145,11 @@ export var getResult = (
   maxCount,
   titles = [],
   authors = [],
+  filteredIdSet = new Set([]),
 ) => {
-  var result = processSummaries(keywords, summaries)
+  const result = processSummaries(keywords, summaries, filteredIdSet)
   // sort only the grouped scores, not the entire list
-  var sorted = sortObjToArr(result)
+  const sorted = sortObjToArr(result)
   // trim with max number of results, loop will break once the result stack reach the max count
   return trimResults(sorted, maxCount, result, titles, authors)
 }
@@ -136,9 +159,18 @@ export const searchSummary = (
   maxCount,
   titles = [],
   authors = [],
+  indxdSummaries,
 ) => {
+  const filteredIdSet = filterSummaries(indxdSummaries, keyword)
   const keywords = findKeywords(keyword)
-  const result = getResult(keywords, summaries, maxCount, titles, authors)
+  const result = getResult(
+    keywords,
+    summaries,
+    maxCount,
+    titles,
+    authors,
+    filteredIdSet,
+  )
   return result
 }
 
@@ -156,4 +188,65 @@ const leastPointList = {
   we: 0.001,
   am: 0.001,
   been: 0.001,
+  and: 0.001,
+}
+
+/**
+ * ## indexSummaries
+ * This method will index all sumaries and generate the word index mapper
+ * word index mapper is nothing but the js object which contains the words as keys and ids of the summaries which contains the word
+ * {
+ *  book:new Set([0,1,2...])
+ * }
+ *
+ * Expensive operation should happen on server and keep result on redis or any in memory storage
+ * needs to be indexed on every data insertion/updation/deletion
+ *
+ * @param {*} [summaries=[]] all summaries
+ * @returns indexed mapper
+ */
+export const indexSummaries = (summaries = []) => {
+  var mapper = {}
+  summaries.forEach((smr = {}) => {
+    const {summary = '', id} = smr
+    const wordArr = summary.split(' ')
+    wordArr.forEach((word = '') => {
+      let wrd = word.toLowerCase()
+      if (wrd in mapper && mapper[wrd] instanceof Set) {
+        mapper[wrd].add(id)
+      } else {
+        mapper[wrd] = new Set([id])
+      }
+    })
+  })
+  return mapper
+}
+
+/**
+ * ##filterSummaries
+ *
+ * Method to filter the summaries using the word index mapper
+ * word index mapper is nothing but the js object which contains the words as keys and ids of the summaries which contains the word
+ * {
+ *  book:new Set([0,1,2...]),
+ *  is:new Set([0,1,2...])
+ * }
+ *
+ * @param {*} summaries
+ * @param {*} [mapper={}]
+ * @param {*} keyword
+ * @returns
+ */
+export const filterSummaries = (mapper = {}, keyword = '') => {
+  let resultSet = new Set([])
+  // only words
+  // can thing about removing auxilaries here
+  // but we will end up having no result if the user search for "is"
+  keyword.split(' ').forEach((key = '') => {
+    const kw = key.toLowerCase()
+    if (kw in mapper && mapper[kw] instanceof Set) {
+      resultSet = new Set([...resultSet, ...mapper[kw]])
+    }
+  })
+  return resultSet
 }

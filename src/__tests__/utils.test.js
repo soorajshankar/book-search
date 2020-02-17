@@ -2,18 +2,19 @@ import assert from 'assert'
 import {
   findKeywords,
   getScore,
-  getMtchCnt,
   getResult,
   trimResults,
+  indexSummaries,
+  filterSummaries,
 } from '../utils/utils'
-import {keywords, data, sortedids, result} from '../testData'
+import {keywords, data, sortedids, result, filteredIdSet} from '../testData'
 
 // findKeywords
 describe('#findKeywords', () => {
   describe('valid Test1', () => {
     const kwrds = findKeywords('is your problems')
     it('should have valid results', () => {
-      assert.equal(kwrds['is'], 0.3333333333333333)
+      assert.equal(kwrds['is'], 0.001)
       assert.equal(kwrds['is your'], 0.5)
       assert.equal(kwrds['is your problems'], 1)
     })
@@ -24,7 +25,7 @@ describe('#findKeywords', () => {
   describe('valid Test2 big query', () => {
     const kwrds = findKeywords('is your problems related to books')
     it('should have valid results', () => {
-      assert.equal(kwrds['is'], 0.16666666666666666)
+      assert.equal(kwrds['is'], 0.001)
       assert.equal(kwrds['is your'], 0.2)
       assert.equal(kwrds['is your problems'], 0.25)
       assert.equal(kwrds['is your problems related to books'], 1)
@@ -46,13 +47,13 @@ describe('#getScore', () => {
   describe('valid Test1', () => {
     const score = getScore(keywords, data.summaries[10].summary)
     it('should have valid score', () => {
-      assert.equal(score, 0.001)
+      assert.equal(score, 0.3333333333333333)
     })
   })
   describe('valid Test2 big query', () => {
     const score = getScore(keywords, data.summaries[44].summary)
     it('should have valid results', () => {
-      assert.equal(score, 0.004)
+      assert.equal(score, 0.3333333333333333)
     })
   })
   describe('invalid Test', () => {
@@ -66,25 +67,46 @@ describe('#getScore', () => {
     })
   })
 })
-
-// getMtchCnt
-describe('#getMtchCnt', () => {
+// getScore
+describe('#indexSummaries', () => {
   describe('valid Test1', () => {
-    const score = getMtchCnt(data.summaries[12].summary, 'is')
-    it('should have valid score', () => {
-      assert.equal(score, 1)
+    const mapper = indexSummaries(data.summaries)
+    it('should have valid mapper', () => {
+      assert.equal(Object.keys(mapper).length, 1270)
+      assert.equal(mapper['book'] instanceof Set, true)
+      assert.equal(mapper['book'].has(0), true)
     })
   })
-  describe('valid Test2', () => {
-    const score = getMtchCnt(data.summaries[12].summary, 'book')
-    it('should have valid score', () => {
-      assert.equal(score, 1)
-    })
-  })
+
   describe('invalid Test', () => {
-    const score = getMtchCnt(data.summaries[12].summary, 'is book')
-    it('should have valid score', () => {
-      assert.equal(score, 0)
+    const mapper = indexSummaries([])
+    it('should have valid mapper', () => {
+      assert.equal(Object.keys(mapper).length, 0)
+    })
+  })
+})
+
+// getScore
+describe('#filterSummaries', () => {
+  describe('valid Test1', () => {
+    const indxdSummaries = indexSummaries(data.summaries)
+    const summ = filterSummaries(indxdSummaries, 'is your problems')
+    it('should have valid mapper', () => {
+      assert.equal(summ instanceof Set, true)
+      assert.equal(summ.size, 50)
+      assert.equal(summ.has(0), true)
+      assert.equal(summ.has(49), true)
+      assert.equal(summ.has(43), true)
+      assert.equal(summ.has(26), false)
+    })
+  })
+
+  describe('invalid Test', () => {
+    const summ = filterSummaries([], '')
+    it('should have valid mapper', () => {
+      assert.equal(summ instanceof Set, true)
+      assert.equal(summ.has(0), false)
+      assert.equal(summ.size, 0)
     })
   })
 })
@@ -118,17 +140,24 @@ describe('#trimResults', () => {
 // getResult
 describe('#getResult', () => {
   describe('valid Test1', () => {
-    const res = getResult(keywords, data.summaries, 3)
+    const res = getResult(
+      keywords,
+      data.summaries,
+      3,
+      data.titles,
+      data.authors,
+      filteredIdSet,
+    )
     it('should have number of results', () => {
       assert.equal(res.length, 3)
     })
     it('should have valid result', () => {
-      assert.equal(res[0].id, '0')
-      assert.equal(res[1].id, '7')
-      assert.equal(res[2].id, '48')
-      assert.equal(res[2].pt, '0.6746666666666666')
-      assert.equal(res[1].pt, '0.8393333333333333')
-      assert.equal(res[1].summary.length, 341)
+      assert.equal(res[0].id, '48')
+      assert.equal(res[1].id, '0')
+      assert.equal(res[2].id, '7')
+      assert.equal(res[2].pt, '2.5')
+      assert.equal(res[1].pt, '2.8333333333333335')
+      assert.equal(res[1].summary.length, 375)
     })
   })
   describe('empty Test', () => {

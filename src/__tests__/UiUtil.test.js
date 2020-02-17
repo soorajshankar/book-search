@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {getSuggestions} from '../utils/UiUtil'
+import {getSuggestions, trimString} from '../utils/UiUtil'
 import {data} from '../testData'
 
 // getSuggestions
@@ -29,6 +29,33 @@ describe('#getSuggestions', () => {
     it('should respond to invalid inputs with empty object', () => {
       const suggestions = getSuggestions('')
       assert.equal(Object.keys(suggestions).length, 0)
+    })
+  })
+})
+
+// trimString
+describe('#trimString', () => {
+  describe('valid Test1', () => {
+    const str = trimString(
+      'book book book book book book book book book book book book book book book book book book book book book book book book book book book book book book book book book book book book ',
+      10,
+    )
+    it('should have valid results', () => {
+      assert.equal(str.length, 13) // including ...
+      assert.equal(str, 'book book ...')
+    })
+  })
+  describe('valid Test1', () => {
+    const str = trimString('b', 4)
+    it('should have valid results', () => {
+      assert.equal(str, 'b')
+    })
+  })
+
+  describe('invalid Test', () => {
+    it('should respond to invalid inputs', () => {
+      const str = trimString({}, 4)
+      assert.equal(str, '')
     })
   })
 })

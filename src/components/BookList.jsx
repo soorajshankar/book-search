@@ -16,7 +16,7 @@ const BookList = ({list = []}) => (
         />
       ))
     ) : (
-      <p style={{textAlign: 'center'}}>{noBookMessage}</p>
+      <h4 style={{color: '#888884'}}>{noBookMessage}</h4>
     )}
   </div>
 )

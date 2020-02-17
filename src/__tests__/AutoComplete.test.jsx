@@ -8,7 +8,7 @@ describe('renders AutoComplete', () => {
     const {container} = render(
       <AutoComplete
         value="test"
-        suggestions={['test', 'test2']}
+        suggestions={[{title: 'test'}, {title: 'test2'}]}
         onSelect={() => count++}
       />,
     )
@@ -19,7 +19,7 @@ describe('renders AutoComplete', () => {
     const {container} = render(
       <AutoComplete
         value="test"
-        suggestions={['test', 'test2']}
+        suggestions={[{title: 'test'}, {title: 'test2'}]}
         onSelect={() => count++}
       />,
     )
@@ -57,7 +57,7 @@ describe('renders AutoComplete', () => {
     const {container} = render(
       <AutoComplete
         value="test"
-        suggestions={['test', 'test2']}
+        suggestions={[{title: 'test'}, {title: 'test2'}]}
         onSelect={d => count.push(d)}
         onChange={e => (value = e)}
       />,
@@ -84,7 +84,7 @@ describe('renders AutoComplete', () => {
     const {container, rerender} = render(
       <AutoComplete
         value="test"
-        suggestions={['test', 'test2']}
+        suggestions={[{title: 'test'}, {title: 'test2'}]}
         onSelect={d => count.push(d)}
         onChange={e => (value = e)}
       />,
@@ -108,7 +108,7 @@ describe('renders AutoComplete', () => {
     rerender(
       <AutoComplete
         value="rere"
-        suggestions={['rere', 'rere2', 'rere3']}
+        suggestions={[{title: 'rere'}, {title: 'rere2'}, {title: 'rere3'}]}
         onSelect={d => count.push(d)}
         onChange={e => (value = e)}
       />,

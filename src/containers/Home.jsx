@@ -5,7 +5,12 @@ import BookList from '../components/BookList'
 import AutoComplete from '../components/AutoComplete'
 import {getSuggestions, debounce} from '../utils/UiUtil'
 import {data} from '../utils/data'
-import {searchSummary} from '../utils/utils'
+import {searchSummary, indexSummaries} from '../utils/utils'
+
+// NOTE****
+// this is an expensive operation and intended to happen in the backend
+// result can be memoized in redis or any in memory cache
+const indxdSummaries = indexSummaries(data.summaries)
 
 const Home = () => {
   const [value, setValue] = useState('')
@@ -16,22 +21,25 @@ const Home = () => {
   const onChange = e => {
     const input = e
     if (input.length < 1) return setSuggestions([])
-    const suggestions = getSuggestions(e, data.queries)
-    setSuggestions([...suggestions])
-    setValue(input)
-  }
-  // prevent rerendering on fast typing, onChange fetch suggestions after 200ms no typing mode
-  const debouncedOnChange = debounce(onChange, 200)
-
-  const onSubmit = () => {
-    const result = searchSummary(
-      value,
+    const suggestions = searchSummary(
+      input,
       data.summaries,
       maxSug,
       data.titles,
       data.authors,
+      indxdSummaries,
     )
-    setResults(result)
+    // console.log(suggestions)
+    setSuggestions(suggestions)
+  }
+  // prevent rerendering on fast typing, onChange fetch suggestions after 200ms no typing mode
+  const debouncedOnChange = debounce(onChange, 500)
+
+  const onSubmit = () => {
+    if (typeof value == 'object' && 'id' in value) {
+      if (results[results?.length - 1]?.id === value.id) return // easy exit on double click, not doing find all the time
+      if (!results.find(i => i.id == value.id)) setResults([...results, value])// add to the cart 
+    }
   }
   const onSelect = e => {
     setSuggestions([])
@@ -48,11 +56,11 @@ const Home = () => {
             onSelect,
             visible: true,
             suggestions,
-            value,
+            value: value.title || '',
           }}
         />
         <Button className="btn__search" onClick={onSubmit}>
-          Search
+          Submit
         </Button>
       </div>
       <MaxSuggestions {...{maxSug, handleMaxSug}} />
