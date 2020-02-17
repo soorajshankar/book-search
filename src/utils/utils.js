@@ -29,7 +29,8 @@ export const formSentFromIndex = (array, index, acc) => {
   const sntcObj = acc
   for (let i = index; i < array.length; i++) {
     sntc = sntc ? `${sntc} ${array[i]}` : array[i] // constructing word groups with spaces
-    sntcObj[sntc] = getWeight(i - index + 1, array.length) // progressively storing keyword:weight pair into an object(to avoid another loop)
+    sntcObj[sntc] =
+      leastPointList[sntc] || getWeight(i - index + 1, array.length) // progressively storing keyword:weight pair into an object(to avoid another loop)
   }
   return sntcObj
 }
@@ -43,20 +44,37 @@ const getWeight = (pos, length) => {
 export const getScore = (keywords = {}, summary = {}, id) => {
   // id param is just for debugging
   let score = 0
-  // count all keywords reps K iterartions.
-  for (const [kw, weight] of Object.entries(keywords)) {
-    const matchCount = getMtchCnt(summary, kw)
-    // mutiply with keyword weight
-    const adder = matchCount * (leastPointList[kw] || weight)
-    score += adder
-    // if (id == 40) console.log({ score, matchCount, kw, weight, adder });
+  var last
+  // loop through summary words once
+  const smArr = summary.split(' ')
+
+  // DEBUG PURPOSE
+  // let combs = []
+  // let wrds = []
+
+  // this loop reduces the complexity to N (from N* K old regex method)
+  for (const word of smArr) {
+    const wrd = word.toLowerCase()
+    if (wrd in keywords) {
+      score += keywords[wrd] // adding score
+
+      // if the words are contineous add extra points and set last with the new combination
+      const combination = `${last} ${wrd}`
+      if (last !== undefined && combination in keywords) {
+        score += keywords[combination] // along with word score adding combination score
+        last = combination
+        // combs.push(combination) // debugging
+      } else {
+        last = wrd
+        // wrds.push(wrd) // debugging
+      }
+    } else {
+      // no match clear last wrd
+      last = undefined
+    }
   }
   return score
 }
-
-export const getRegex = tst => new RegExp(tst, 'gi')
-export const getMtchCnt = (txt, kw) =>
-  ((txt || '').match(getRegex(kw)) || []).length
 
 export var processSummaries = (keywords = {}, summaries = []) => {
   var result = {}
@@ -156,4 +174,5 @@ const leastPointList = {
   we: 0.001,
   am: 0.001,
   been: 0.001,
+  and: 0.001,
 }
