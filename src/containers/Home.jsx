@@ -38,7 +38,7 @@ const Home = () => {
   const onSubmit = () => {
     if (typeof value == 'object' && 'id' in value) {
       if (results[results?.length - 1]?.id === value.id) return // easy exit on double click, not doing find all the time
-      if (!results.find(i => i.id == value.id)) setResults([...results, value])// add to the cart 
+      if (!results.find(i => i.id == value.id)) setResults([...results, value]) // add to the cart
     }
   }
   const onSelect = e => {
@@ -59,8 +59,17 @@ const Home = () => {
             value: value.title || '',
           }}
         />
-        <Button className="btn__search" onClick={onSubmit}>
+        <Button
+          className="btn__search tooltip"
+          onClick={onSubmit}
+          disabled={!value.id}
+        >
           Submit
+          {!value.id && (
+            <span class="tooltiptext">
+              Please select a book before submiting
+            </span>
+          )}
         </Button>
       </div>
       <MaxSuggestions {...{maxSug, handleMaxSug}} />
