@@ -23,9 +23,15 @@ exports[`renders Home should match Snapshot 1`] = `
         />
       </div>
       <button
-        class="btn__search"
+        class="btn__search tooltip"
+        disabled=""
       >
         Submit
+        <span
+          class="tooltiptext"
+        >
+          Please select a book before submiting
+        </span>
       </button>
     </div>
     <div
